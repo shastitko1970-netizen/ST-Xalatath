@@ -30,3 +30,9 @@ Era: WotLK → SL
 Slash: `/xal` `/xal-where` `/xal-want` `/era` `/blade`
 
 Memory Books stays a separate scene book. This extension never overwrites Warcraft-AU.
+
+## Skin
+
+Import `theme/Xalatath-theme.json` in SillyTavern User Settings → UI Theme.
+Set background to `assets/st-xalatath-bg.png`.
+
