@@ -1,26 +1,32 @@
-# Ксал'атат — расширение SillyTavern 1.18
+﻿# Ксал'атат
 
-Третья сторона для кампании Файроны / ветки Азерота. Не универсальный ящик: плашки, голос и стена знания заточены под эту пару.
+SillyTavern 1.18 extension for the Fyriona Warcraft AU: HUD plates, prompt injection, Memory Books coop.
 
-## Установка
+<p align="center">
+  <img src="assets/banner.png" alt="Ксал'атат" width="100%">
+</p>
 
-1. Текущий пользователь: папку `ST-Xalatath` в `data/<handle>/extensions/ST-Xalatath`.
-2. Или для всех: `public/scripts/extensions/third-party/ST-Xalatath`.
-3. Перезагрузи ST → Manage Extensions → включи «Ксал'атат».
-4. Открой чат с **Азерот** (или Файрона). HUD появится; генерация съест плашку сама.
+## Avatars
 
-## Memory Book (обязательно раздельно)
+| Файрона | Ксал'атат | Азерот |
+| :---: | :---: | :---: |
+| <img src="assets/fyriona-avatar.png" width="240"> | <img src="assets/xalatath-avatar.png" width="240"> | <img src="assets/azeroth-avatar.png" width="240"> |
 
-- **Warcraft-AU** = книга персонажа / чата. Кампанейский лор. Это расширение **никогда** в неё не пишет.
-- **Memory Book** (aikohanasaki/SillyTavern-MemoryBooks) = **отдельная** авто-книга сцен. Не сливай её с Warcraft-AU и не давай ей перезаписывать кампанию.
-- Lorebook Ordering: сначала Warcraft-AU, Memory Book — после.
-- Плашка Ксал идёт как `setExtensionPrompt` (ключ `ST_XALATATH`), не как constant WI: так не душит recursion / STMB.
-- «В память» пишет наш журнал в `chatMetadata`. Если в чате есть маркеры STMB `►◄` — тост «отметь ►◄ и Create Memory». В их lorebook мы не пишем.
-- «Скопировать трекер Ксал» — короткий текст в Side Prompt STMB.
-- Мы **не** прячем сообщения.
+Player card is **Файрона**. Chat character is **Азерот**. Xal lives in the blade and in this HUD.
 
-## Команды
+## Install
 
-`/xal` `/xal-where` `/xal-want` `/era` `/blade` `/xal-bond` `/xal-scene` `/xal-mem` `/xal-tracker`
+SillyTavern → Extensions → Install extension → paste:
 
-Макросы: `{{xal_tone}}` `{{xal_where}}` `{{xal_era}}` `{{xal_want}}` `{{xal_bond}}` `{{xal_scene}}`
+`https://github.com/shastitko1970-netizen/ST-Xalatath`
+
+Reload, enable **Ксал'атат**. Open a chat with Азерот / Файрона.
+
+## Plates
+
+Tone: шепчет / давит / помогает / ревнует / молчит / язвит  
+Where: клинок / приют / проекция / разлучена  
+Era: WotLK → SL  
+Slash: `/xal` `/xal-where` `/xal-want` `/era` `/blade`
+
+Memory Books stays a separate scene book. This extension never overwrites Warcraft-AU.
