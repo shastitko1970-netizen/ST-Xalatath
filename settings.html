@@ -1,0 +1,52 @@
+<div class="xal-settings" id="st_xalatath_settings">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <b>Ксал'атат</b>
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+        </div>
+        <div class="inline-drawer-content">
+            <p class="xal-set-lead">Плашки и инъекция для кампании Файроны. Книга Warcraft-AU не трогается. Memory Book — отдельная книга сцен.</p>
+
+            <label class="checkbox_label" for="xal_set_hud">
+                <input id="xal_set_hud" type="checkbox" {{#if hudEnabled}}checked{{/if}} />
+                <span>Показывать HUD (плашки)</span>
+            </label>
+
+            <label class="checkbox_label" for="xal_set_inject">
+                <input id="xal_set_inject" type="checkbox" {{#if injectEnabled}}checked{{/if}} />
+                <span>Инъекция плашки в генерацию</span>
+            </label>
+
+            <label class="checkbox_label" for="xal_set_require">
+                <input id="xal_set_require" type="checkbox" {{#if requireXalBeat}}checked{{/if}} />
+                <span>Ксал обязана говорить (если клинок при ней и тон не «молчит»)</span>
+            </label>
+
+            <label class="checkbox_label" for="xal_set_respect">
+                <input id="xal_set_respect" type="checkbox" {{#if respectMemoryBook}}checked{{/if}} />
+                <span>Не спорить с Memory Book</span>
+            </label>
+
+            <label class="checkbox_label" for="xal_set_autobind">
+                <input id="xal_set_autobind" type="checkbox" {{#if autoBind}}checked{{/if}} />
+                <span>Авто-включение в чатах Азерот / Файрона</span>
+            </label>
+
+            <label class="checkbox_label" for="xal_set_force">
+                <input id="xal_set_force" type="checkbox" {{#if forceEnable}}checked{{/if}} />
+                <span>Принудительно включить в любом чате</span>
+            </label>
+
+            <label for="xal_set_depth">
+                <span>Глубина инъекции (по умолчанию 2; 0–1 оставь Memory Book)</span>
+            </label>
+            <input id="xal_set_depth" class="text_pole" type="number" min="0" max="10" step="1" value="{{injectDepth}}" />
+
+            <div class="xal-set-status" id="xal_set_status"></div>
+            <div class="xal-set-hint">
+                Ключ промпта: <code>ST_XALATATH</code>. Журнал: <code>chatMetadata.xal_memories</code>.
+                Warcraft-AU не перезаписывается. Сообщения не прячутся.
+            </div>
+        </div>
+    </div>
+</div>
