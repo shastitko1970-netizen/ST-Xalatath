@@ -36,3 +36,10 @@ Memory Books stays a separate scene book. This extension never overwrites Warcra
 Import `theme/Xalatath-theme.json` in SillyTavern User Settings → UI Theme.
 Set background to `assets/st-xalatath-bg.png`.
 
+
+## Era court
+
+HUD era plate injects who is alive, who is king, and Anduin's age.
+Slash: `/era-who` or `/xal-who`.
+Lorebook with era tables: `pack/Warcraft-AU.json` (import in World Info; do not overwrite QF).
+
