@@ -1,28 +1,35 @@
-/* Ксал'атат — gothic HUD / settings. Black, deep purple, old gold. */
+/* Ксал'атат — gothic HUD. Old gold, void purple, black. Serif. */
 
 #xal-hud {
     position: fixed;
     z-index: 9500;
-    top: 72px;
+    top: 64px;
     right: 18px;
-    width: 312px;
+    width: 360px;
     max-width: calc(100vw - 24px);
-    max-height: calc(100vh - 90px);
+    max-height: calc(100vh - 80px);
     overflow: hidden;
     display: flex;
     flex-direction: column;
+    padding: 0;
     background:
-        radial-gradient(120% 80% at 0% 0%, rgba(91, 45, 138, 0.28), transparent 55%),
-        linear-gradient(180deg, #16111c 0%, #0c0a10 70%);
+        radial-gradient(130% 90% at 0% 0%, rgba(86, 36, 128, 0.34), transparent 52%),
+        radial-gradient(80% 60% at 100% 100%, rgba(40, 18, 64, 0.35), transparent 50%),
+        linear-gradient(180deg, #17111f 0%, #0b090f 62%, #08060c 100%);
     color: #e8dcc8;
-    border: 1px solid #8a7030;
+    border: 1px solid #c4a35a;
+    outline: 1px solid #5a4218;
+    outline-offset: 2px;
     box-shadow:
-        0 0 0 1px #1a1224,
-        0 10px 28px rgba(0, 0, 0, 0.55),
-        inset 0 1px 0 rgba(196, 163, 90, 0.18);
-    font-family: Georgia, "Palatino Linotype", "Times New Roman", serif;
-    font-size: 13px;
-    line-height: 1.35;
+        0 0 0 3px #0a0710,
+        0 0 0 4px #8a7030,
+        0 18px 44px rgba(0, 0, 0, 0.68),
+        0 0 36px rgba(72, 28, 110, 0.22),
+        inset 0 0 42px rgba(68, 28, 110, 0.2),
+        inset 0 1px 0 rgba(232, 212, 160, 0.28);
+    font-family: Georgia, "Palatino Linotype", Palatino, "Times New Roman", serif;
+    font-size: 13.5px;
+    line-height: 1.4;
     user-select: none;
 }
 
@@ -41,11 +48,13 @@
 .xal-hud-head {
     display: flex;
     align-items: center;
-    gap: 8px;
-    padding: 7px 10px;
+    gap: 10px;
+    padding: 11px 14px;
     cursor: grab;
-    background: linear-gradient(90deg, #1c1426, #120e18);
-    border-bottom: 1px solid #5a4620;
+    background:
+        linear-gradient(90deg, rgba(38, 24, 52, 0.95), rgba(16, 12, 22, 0.95));
+    border-bottom: 1px solid #8a7030;
+    box-shadow: inset 0 -1px 0 rgba(196, 163, 90, 0.18);
 }
 
 .xal-hud-head:active {
@@ -53,90 +62,110 @@
 }
 
 .xal-blade-mark {
-    width: 16px;
-    height: 16px;
-    flex: 0 0 16px;
+    width: 18px;
+    height: 18px;
+    flex: 0 0 18px;
     color: #c4a35a;
 }
 
 .xal-hud-title {
     flex: 1;
-    font-size: 14px;
-    letter-spacing: 0.06em;
+    font-size: 16px;
+    letter-spacing: 0.16em;
     color: #c4a35a;
-    text-transform: uppercase;
+    font-variant: small-caps;
+    text-transform: lowercase;
+    font-weight: 600;
 }
 
 .xal-hud-badge {
     font-size: 10px;
-    letter-spacing: 0.04em;
-    color: #b9a4d4;
-    border: 1px solid #4a306e;
-    padding: 1px 5px;
+    letter-spacing: 0.08em;
+    color: #c4b0e0;
+    border: 1px solid #6a4488;
+    padding: 2px 6px;
     background: #1a1026;
 }
 
 .xal-hud-btn {
     appearance: none;
-    border: 1px solid #6a5424;
+    border: 1px solid #8a7030;
     background: #1a1420;
     color: #e8dcc8;
-    width: 22px;
-    height: 22px;
-    line-height: 20px;
+    width: 26px;
+    height: 26px;
+    line-height: 22px;
     padding: 0;
     cursor: pointer;
     font-family: inherit;
-    font-size: 12px;
+    font-size: 16px;
 }
 
 .xal-hud-btn:hover {
-    border-color: #c4a35a;
-    color: #c4a35a;
+    border-color: #e8d4a0;
+    color: #1a1220;
+    background: #c4a35a;
 }
 
 .xal-hud-body {
-    padding: 8px 10px 10px;
+    padding: 12px 12px 14px;
     overflow: auto;
 }
 
+/* Section plates: место / тон / хочет / эпоха / связь / сцена */
+.xal-plate {
+    margin: 0 0 10px;
+    padding: 10px 12px 11px;
+    background:
+        linear-gradient(180deg, rgba(24, 16, 36, 0.96), rgba(10, 8, 16, 0.96));
+    border: 1px solid rgba(196, 163, 90, 0.42);
+    box-shadow:
+        inset 0 0 0 1px rgba(18, 12, 26, 0.85),
+        inset 0 0 22px rgba(72, 32, 112, 0.16),
+        0 1px 0 rgba(196, 163, 90, 0.14);
+}
+
 .xal-row {
-    margin: 0 0 8px;
+    margin: 0;
 }
 
 .xal-lab {
     display: block;
-    font-size: 10px;
-    letter-spacing: 0.12em;
+    font-size: 11px;
+    letter-spacing: 0.16em;
     text-transform: uppercase;
-    color: #c4a35a;
-    margin-bottom: 4px;
+    color: #c4b0e0;
+    margin-bottom: 7px;
 }
 
-
 .xal-court {
-    font-size: 10px;
-    color: #c4a35a;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    line-height: 1.3;
-    margin: -2px 0 8px;
+    font-size: 12.5px;
+    color: #e8d4a0;
+    letter-spacing: 0.03em;
+    line-height: 1.45;
+    margin: 8px 0 0;
+    white-space: normal;
+    overflow: visible;
+    text-overflow: unset;
+}
+
+.xal-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
 }
 
 .xal-cycle,
 .xal-chip {
     appearance: none;
-    border: 1px solid #4a306e;
+    border: 1px solid #5a3a7a;
     background: #140f1a;
     color: #e8dcc8;
     font-family: inherit;
-    font-size: 12px;
-    padding: 4px 8px;
+    font-size: 13px;
+    padding: 6px 11px;
     cursor: pointer;
-    margin: 0 4px 4px 0;
+    margin: 0;
 }
 
 .xal-cycle {
@@ -144,30 +173,34 @@
     text-align: left;
     border-color: #8a7030;
     background: #18121f;
+    padding: 8px 12px;
+    font-size: 14px;
 }
 
 .xal-cycle:hover,
 .xal-chip:hover {
     border-color: #c4a35a;
+    color: #f3ead6;
 }
 
 .xal-chip.is-on {
-    background: #3d1f5c;
-    border-color: #c4a35a;
-    color: #f3ead6;
+    background: #c4a35a;
+    border-color: #e8d4a0;
+    color: #1a1220;
+    box-shadow: 0 0 12px rgba(196, 163, 90, 0.28);
 }
 
 .xal-want {
     width: 100%;
     box-sizing: border-box;
     background: #0c0a10;
-    border: 1px solid #5a4620;
+    border: 1px solid #6a5424;
     color: #e8dcc8;
     font-family: inherit;
-    font-size: 12px;
-    padding: 5px 7px;
+    font-size: 13px;
+    padding: 8px 10px;
     resize: vertical;
-    min-height: 44px;
+    min-height: 52px;
 }
 
 .xal-toggle-row {
@@ -180,9 +213,9 @@
 
 .xal-switch {
     position: relative;
-    width: 36px;
-    height: 18px;
-    flex: 0 0 36px;
+    width: 40px;
+    height: 20px;
+    flex: 0 0 40px;
     background: #1a1224;
     border: 1px solid #5a4620;
     cursor: pointer;
@@ -195,24 +228,24 @@
 
 .xal-switch i {
     position: absolute;
-    top: 1px;
+    top: 2px;
     left: 2px;
-    width: 12px;
-    height: 12px;
+    width: 14px;
+    height: 14px;
     background: #9a8b78;
     display: block;
 }
 
 .xal-switch.is-on i {
-    left: 20px;
+    left: 22px;
     background: #c4a35a;
 }
 
 .xal-actions {
     display: flex;
     flex-wrap: wrap;
-    gap: 6px;
-    margin-top: 6px;
+    gap: 8px;
+    margin-top: 8px;
 }
 
 .xal-action {
@@ -223,25 +256,25 @@
     color: #c4a35a;
     font-family: inherit;
     font-size: 11px;
-    letter-spacing: 0.04em;
+    letter-spacing: 0.06em;
     text-transform: uppercase;
-    padding: 6px 6px;
+    padding: 8px 8px;
     cursor: pointer;
 }
 
 .xal-action:hover {
-    background: #2a1c38;
-    color: #f3ead6;
+    background: #c4a35a;
+    color: #1a1220;
 }
 
 .xal-silence {
     display: none;
-    margin: 6px 0;
-    padding: 6px 7px;
+    margin: 0 0 10px;
+    padding: 8px 10px;
     border: 1px solid #8b2a3a;
     background: rgba(80, 16, 28, 0.45);
     color: #f0c8c8;
-    font-size: 12px;
+    font-size: 13px;
 }
 
 .xal-silence.is-on {
@@ -249,21 +282,22 @@
 }
 
 .xal-stmb {
-    font-size: 11px;
+    font-size: 12px;
     color: #9a8b78;
-    margin: 4px 0 2px;
+    margin: 2px 0 8px;
+    line-height: 1.4;
 }
 
 .xal-stmb.is-on {
-    color: #b9a4d4;
+    color: #c4b0e0;
 }
 
 .xal-journal {
     display: none;
     margin-top: 8px;
-    border-top: 1px solid #5a4620;
-    padding-top: 6px;
-    max-height: 220px;
+    border-top: 1px solid #8a7030;
+    padding-top: 8px;
+    max-height: 240px;
     overflow: auto;
 }
 
@@ -272,34 +306,34 @@
 }
 
 .xal-journal-item {
-    border: 1px solid #3d2a18;
+    border: 1px solid #5a4218;
     background: #100c14;
-    padding: 6px 7px;
-    margin-bottom: 6px;
+    padding: 8px 9px;
+    margin-bottom: 8px;
 }
 
 .xal-journal-item b {
     display: block;
     color: #c4a35a;
     font-weight: normal;
-    font-size: 12px;
+    font-size: 13px;
     margin-bottom: 3px;
 }
 
 .xal-journal-item span {
     color: #9a8b78;
-    font-size: 11px;
+    font-size: 12px;
 }
 
 .xal-journal-item p {
-    margin: 4px 0 0;
+    margin: 5px 0 0;
     color: #e8dcc8;
-    font-size: 12px;
+    font-size: 12.5px;
 }
 
 .xal-offbar {
     display: none;
-    padding: 8px 10px 10px;
+    padding: 12px 14px 14px;
 }
 
 #xal-hud.xal-idle .xal-hud-body {
@@ -317,8 +351,114 @@
     background: #1a1420;
     color: #e8dcc8;
     font-family: inherit;
-    padding: 6px;
+    padding: 10px;
     cursor: pointer;
+}
+
+.xal-offbar button:hover {
+    background: #c4a35a;
+    color: #1a1220;
+}
+
+/* Launcher chip near send / wand — not a permanent overlay */
+#xal-chip {
+    appearance: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 4px 9px 4px 7px;
+    margin: 0 4px;
+    border: 1px solid #c4a35a;
+    background:
+        linear-gradient(180deg, #1c1426 0%, #0e0b12 100%);
+    color: #c4a35a;
+    font-family: Georgia, "Palatino Linotype", Palatino, serif;
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    cursor: pointer;
+    box-shadow:
+        0 0 0 1px #0a0710,
+        inset 0 0 10px rgba(72, 28, 110, 0.22);
+    line-height: 1.2;
+    flex: 0 0 auto;
+    align-self: flex-end;
+}
+
+#xal-chip .xal-blade-mark {
+    width: 14px;
+    height: 14px;
+    flex: 0 0 14px;
+}
+
+#xal-chip .xal-chip-lab {
+    font-variant: small-caps;
+    letter-spacing: 0.1em;
+}
+
+#xal-chip .xal-chip-era {
+    color: #c4b0e0;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    border-left: 1px solid #5a4218;
+    padding-left: 6px;
+}
+
+#xal-chip:hover,
+#xal-chip.is-open {
+    background: #c4a35a;
+    color: #1a1220;
+    box-shadow: 0 0 14px rgba(196, 163, 90, 0.28);
+}
+
+#xal-chip:hover .xal-chip-era,
+#xal-chip.is-open .xal-chip-era {
+    color: #3d1f5c;
+    border-left-color: #5a4218;
+}
+
+#xal-chip.xal-hidden {
+    display: none !important;
+}
+
+body > #xal-chip {
+    position: fixed;
+    z-index: 9400;
+    left: 14px;
+    bottom: 18px;
+}
+
+#send_form {
+    position: relative;
+}
+
+#send_form > #xal-chip {
+    position: absolute;
+    left: 8px;
+    bottom: 8px;
+    z-index: 6;
+}
+
+#leftSendForm #xal-chip,
+#rightSendForm #xal-chip {
+    position: relative;
+    left: auto;
+    bottom: auto;
+}
+
+/* Wand menu item */
+#xal-wand {
+    cursor: pointer;
+    gap: 8px;
+}
+
+#xal-wand .xal-blade-mark {
+    width: 16px;
+    height: 16px;
+    color: #c4a35a;
+}
+
+#xal-wand:hover {
+    color: #c4a35a;
 }
 
 /* Settings drawer extras */
@@ -358,9 +498,9 @@
 
 @media (max-width: 720px) {
     #xal-hud {
-        width: min(312px, calc(100vw - 16px));
+        width: min(360px, calc(100vw - 16px));
         right: 8px;
         top: auto;
-        bottom: 64px;
+        bottom: 72px;
     }
 }

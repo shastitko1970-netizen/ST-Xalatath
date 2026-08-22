@@ -7,9 +7,9 @@
   "js": "index.js",
   "css": "style.css",
   "author": "Yaroslav Brosman",
-  "version": "1.1.1",
+  "version": "1.2.0",
   "homePage": "",
   "auto_update": false,
   "minimum_client_version": "1.13.0",
-  "description": "Плашки Ксал'атат: место, тон, эпоха и двор канона. Не трогает Memory Book."
+  "description": "прячется в палочку, жирные плашки, двор эпохи."
 }

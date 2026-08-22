@@ -70,6 +70,7 @@ const DEFAULT_SETTINGS = Object.freeze({
     hudLeft: null,
     hudTop: null,
     hudCollapsed: false,
+    hudHidden: true,
     journalOpen: false,
 });
 
@@ -647,11 +648,128 @@ function bladeSvg() {
     return '<svg class="xal-blade-mark" viewBox="0 0 16 16" aria-hidden="true"><path fill="currentColor" d="M8.8 1.2 14 7.2c.4.4.3 1-.2 1.3L12 9.6 6.4 15l-1.2-1.2 5.4-5.4-1.6-1.2-5.5 5.5L2.3 12 8 5.8 6.8 4.7 1.5 9.8.3 8.6 6.7 2.4c.4-.4 1-.4 1.3 0L9.6 4l1.2-1.2-1.2-1.2c-.3-.4-.2-1 .2-1.4z"/></svg>';
 }
 
+
+function chipHost() {
+    const left = document.getElementById('leftSendForm');
+    if (left && left.offsetParent !== null) return left;
+    const form = document.getElementById('send_form');
+    if (form) return form;
+    return document.body;
+}
+
+function isHudChromeVisible() {
+    const s = getSettings();
+    return !!s.hudEnabled && (isExtensionActive() || isCampaignChat() || s.forceEnable);
+}
+
+function setHudHidden(hidden) {
+    const s = getSettings();
+    s.hudHidden = !!hidden;
+    s.hudCollapsed = !!hidden;
+    saveSettings();
+    refreshChip();
+    refreshHud();
+}
+
+function toggleHud() {
+    const s = getSettings();
+    setHudHidden(!s.hudHidden);
+}
+
+function refreshChip() {
+    const chip = document.getElementById('xal-chip');
+    if (!chip) return;
+    const s = getSettings();
+    const show = isHudChromeVisible();
+    chip.classList.toggle('xal-hidden', !show);
+    chip.classList.toggle('is-open', show && !s.hudHidden);
+    chip.setAttribute('aria-expanded', show && !s.hudHidden ? 'true' : 'false');
+    const p = readPlates();
+    const era = p.era || '';
+    chip.innerHTML = bladeSvg()
+        + '<span class="xal-chip-lab">Ксал</span>'
+        + (era ? `<span class="xal-chip-era">${era}</span>` : '');
+}
+
+function mountChip() {
+    let chip = document.getElementById('xal-chip');
+    const host = chipHost();
+    if (chip && host && chip.parentElement !== host) {
+        host.appendChild(chip);
+        refreshChip();
+        return chip;
+    }
+    if (chip) {
+        refreshChip();
+        return chip;
+    }
+    chip = el('button', '');
+    chip.id = 'xal-chip';
+    chip.type = 'button';
+    chip.setAttribute('title', "Ксал'атат");
+    chip.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        toggleHud();
+    });
+    host.appendChild(chip);
+    refreshChip();
+    return chip;
+}
+
+function mountWand() {
+    if (document.getElementById('xal-wand')) return;
+    const item = el('div', 'list-group-item flex-container flexGap5 interactable');
+    item.id = 'xal-wand';
+    item.setAttribute('title', "Ксал'атат");
+    item.innerHTML = `${bladeSvg()}<span>Ксал'атат</span>`;
+    item.addEventListener('click', (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        toggleHud();
+    });
+    try {
+        if (typeof window.$ === 'function' && window.$('#extensionsMenu').length) {
+            window.$('#extensionsMenu').append(item);
+            return;
+        }
+    } catch (err) { /* fall through */ }
+    const menu = document.getElementById('extensionsMenu');
+    if (menu) menu.appendChild(item);
+}
+
+function bindOutsideClose() {
+    if (document.documentElement.dataset.xalOutside) return;
+    document.documentElement.dataset.xalOutside = '1';
+    document.addEventListener('pointerdown', (e) => {
+        const s = getSettings();
+        if (s.hudHidden) return;
+        const t = e.target;
+        if (!t || typeof t.closest !== 'function') return;
+        if (t.closest('#xal-hud') || t.closest('#xal-chip') || t.closest('#xal-wand')) return;
+        setHudHidden(true);
+    }, true);
+}
+
+function ensureChrome() {
+    mountChip();
+    mountWand();
+    bindOutsideClose();
+}
+
+function plate(lab, ...nodes) {
+    const sec = el('section', 'xal-plate');
+    sec.appendChild(el('div', 'xal-lab', lab));
+    nodes.forEach((n) => { if (n) sec.appendChild(n); });
+    return sec;
+}
+
 function mountHud() {
     let root = document.getElementById('xal-hud');
     if (!root) {
         root = el('aside', '');
         root.id = 'xal-hud';
+        root.classList.add('xal-hidden');
         document.body.appendChild(root);
     }
     const s = getSettings();
@@ -660,6 +778,7 @@ function mountHud() {
         root.style.top = `${s.hudTop}px`;
         root.style.right = 'auto';
     }
+    ensureChrome();
     refreshHud();
     bindHudDrag(root);
 }
@@ -708,14 +827,17 @@ function chipRow(list, current, onPick) {
 }
 
 function refreshHud() {
+    ensureChrome();
     const root = document.getElementById('xal-hud');
     if (!root) return;
     const s = getSettings();
     const active = isExtensionActive();
-    const show = !!s.hudEnabled && (active || isCampaignChat() || s.forceEnable);
-    root.classList.toggle('xal-hidden', !show);
-    if (!show) return;
-    root.classList.toggle('xal-collapsed', !!s.hudCollapsed);
+    const showChrome = isHudChromeVisible();
+    refreshChip();
+    const panelOpen = showChrome && !s.hudHidden;
+    root.classList.toggle('xal-hidden', !panelOpen);
+    if (!panelOpen) return;
+    root.classList.toggle('xal-collapsed', false);
     root.classList.toggle('xal-idle', !active);
 
     const p = readPlates();
@@ -727,14 +849,12 @@ function refreshHud() {
     head.innerHTML = bladeSvg();
     head.appendChild(el('div', 'xal-hud-title', 'Ксал\'атат'));
     if (stmb.present) head.appendChild(el('span', 'xal-hud-badge', 'STMB'));
-    const collapse = el('button', 'xal-hud-btn', s.hudCollapsed ? '+' : '–');
-    collapse.title = 'свернуть';
-    collapse.addEventListener('click', () => {
-        s.hudCollapsed = !s.hudCollapsed;
-        saveSettings();
-        refreshHud();
+    const close = el('button', 'xal-hud-btn', '×');
+    close.title = 'скрыть';
+    close.addEventListener('click', () => {
+        setHudHidden(true);
     });
-    head.appendChild(collapse);
+    head.appendChild(close);
     root.appendChild(head);
 
     if (!active) {
@@ -753,8 +873,6 @@ function refreshHud() {
 
     const body = el('div', 'xal-hud-body');
 
-    const locRow = el('div', 'xal-row');
-    locRow.appendChild(el('span', 'xal-lab', 'Ксал: место'));
     const locBtn = el('button', 'xal-cycle', p.location);
     locBtn.type = 'button';
     locBtn.addEventListener('click', () => {
@@ -762,20 +880,14 @@ function refreshHud() {
         injectPlate();
         refreshHud();
     });
-    locRow.appendChild(locBtn);
-    body.appendChild(locRow);
+    body.appendChild(plate('место', locBtn));
 
-    const toneRow = el('div', 'xal-row');
-    toneRow.appendChild(el('span', 'xal-lab', 'Тон'));
-    toneRow.appendChild(chipRow(TONES, p.tone, (id) => {
+    body.appendChild(plate('тон', chipRow(TONES, p.tone, (id) => {
         writePlates({ tone: id });
         injectPlate();
         refreshHud();
-    }));
-    body.appendChild(toneRow);
+    })));
 
-    const wantRow = el('div', 'xal-row');
-    wantRow.appendChild(el('span', 'xal-lab', 'Хочет'));
     const want = el('textarea', 'xal-want');
     want.rows = 2;
     want.value = p.want;
@@ -783,11 +895,8 @@ function refreshHud() {
         writePlates({ want: want.value.trim() || DEFAULT_WANT });
         injectPlate();
     });
-    wantRow.appendChild(want);
-    body.appendChild(wantRow);
+    body.appendChild(plate('хочет', want));
 
-    const eraRow = el('div', 'xal-row');
-    eraRow.appendChild(el('span', 'xal-lab', 'Эпоха'));
     const eraBtn = el('button', 'xal-cycle', p.era);
     eraBtn.type = 'button';
     eraBtn.addEventListener('click', () => {
@@ -795,11 +904,9 @@ function refreshHud() {
         injectPlate();
         refreshHud();
     });
-    eraRow.appendChild(eraBtn);
-    body.appendChild(eraRow);
     const court = el('div', 'xal-court', ERA_COURT_LABEL[p.era] || '');
     court.title = currentRosterText();
-    body.appendChild(court);
+    body.appendChild(plate('эпоха · двор', eraBtn, court));
 
     const bladeRow = el('div', 'xal-toggle-row');
     bladeRow.appendChild(el('span', 'xal-lab', 'Клинок при Файроне'));
@@ -812,7 +919,6 @@ function refreshHud() {
         refreshHud();
     });
     bladeRow.appendChild(sw);
-    body.appendChild(bladeRow);
 
     const beatRow = el('div', 'xal-toggle-row');
     beatRow.appendChild(el('span', 'xal-lab', 'Ксал обязана говорить'));
@@ -828,25 +934,22 @@ function refreshHud() {
         bindSettingsInputs();
     });
     beatRow.appendChild(sw2);
-    body.appendChild(beatRow);
+    const bladePlate = el('section', 'xal-plate');
+    bladePlate.appendChild(bladeRow);
+    bladePlate.appendChild(beatRow);
+    body.appendChild(bladePlate);
 
-    const bondRow = el('div', 'xal-row');
-    bondRow.appendChild(el('span', 'xal-lab', 'Связь'));
-    bondRow.appendChild(chipRow(BONDS, p.bond, (id) => {
+    body.appendChild(plate('связь', chipRow(BONDS, p.bond, (id) => {
         writePlates({ bond: id });
         injectPlate();
         refreshHud();
-    }));
-    body.appendChild(bondRow);
+    })));
 
-    const sceneRow = el('div', 'xal-row');
-    sceneRow.appendChild(el('span', 'xal-lab', 'Сцена'));
-    sceneRow.appendChild(chipRow(SCENES, p.scene, (id) => {
+    body.appendChild(plate('сцена', chipRow(SCENES, p.scene, (id) => {
         writePlates({ scene: id });
         injectPlate();
         refreshHud();
-    }));
-    body.appendChild(sceneRow);
+    })));
 
     const sil = el('div', 'xal-silence' + (silence > 0 ? ' is-on' : ''),
         silence > 0 ? `Голос Ксал пропущен: ${silence}` : '');
@@ -854,7 +957,7 @@ function refreshHud() {
 
     const st = el('div', 'xal-stmb' + (stmb.present ? ' is-on' : ''),
         stmb.present
-            ? 'Memory Book рядом. Warcraft-AU отдельно. Мы не пишем в их книгу.'
+            ? 'Memory Book рядом. Warcraft-AU отдельно.'
             : 'Memory Book не найден. Журнал Ксал работает сам.');
     body.appendChild(st);
 
@@ -934,8 +1037,9 @@ function fallbackSettingsHtml(s) {
         <div class="inline-drawer-toggle inline-drawer-header"><b>Ксал'атат</b>
           <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div></div>
         <div class="inline-drawer-content">
-          <p class="xal-set-lead">Плашки кампании Файроны. Warcraft-AU не трогается. Плашка эпохи также вкладывает двор: титулы, возраст, кто жив.</p>
-          ${chk('xal_set_hud', s.hudEnabled, 'Показывать HUD (плашки)')}
+          <p class="xal-set-lead">Плашки кампании Файроны. Панель прячется: чип у ввода и пункт «Ксал'атат» в палочке. Warcraft-AU не трогается. Плашка эпохи также вкладывает двор: титулы, возраст, кто жив.</p>
+          ${chk('xal_set_hud', s.hudEnabled, 'Показывать чип / палочку')}
+          ${chk('xal_set_hidden', s.hudHidden, 'Прятать панель (как Memory Book)')}
           ${chk('xal_set_inject', s.injectEnabled, 'Инъекция плашки в генерацию')}
           ${chk('xal_set_require', s.requireXalBeat, 'Ксал обязана говорить')}
           ${chk('xal_set_respect', s.respectMemoryBook, 'Не спорить с Memory Book')}
@@ -960,11 +1064,13 @@ function bindSettingsInputs() {
             saveSettings();
             if (after) after();
             injectPlate(isExtensionActive() ? false : true);
+            ensureChrome();
             refreshHud();
             refreshSettingsStatus();
         };
     };
     bindChk('xal_set_hud', 'hudEnabled');
+    bindChk('xal_set_hidden', 'hudHidden');
     bindChk('xal_set_inject', 'injectEnabled');
     bindChk('xal_set_require', 'requireXalBeat', () => writePlates({ requireBeat: s.requireXalBeat }));
     bindChk('xal_set_respect', 'respectMemoryBook');
@@ -1215,6 +1321,7 @@ function bindEvents() {
     onEvent(seen, 'CHAT_CHANGED', () => {
         try {
             injectPlate(isExtensionActive() ? false : true);
+            ensureChrome();
             refreshHud();
             refreshSettingsStatus();
         } catch (err) { console.error(LOG, 'chat', err); }
@@ -1242,9 +1349,10 @@ async function bootOnce() {
         registerMacros();
         await mountSettings();
         mountHud();
+        [400, 1500, 4000].forEach((ms) => setTimeout(() => { ensureChrome(); refreshChip(); }, ms));
         injectPlate(isExtensionActive() ? false : true);
         refreshHud();
-        console.log(LOG, 'ready', 'v1.1.1');
+        console.log(LOG, 'ready', 'v1.2.0');
     } catch (err) {
         console.error(LOG, 'boot', err);
     }
