@@ -25,7 +25,7 @@ Reload, enable **Ксал'атат**. Open a chat with Азерот / Файро
 ## Plates
 
 Tone: шепчет / давит / помогает / ревнует / молчит / язвит  
-Where: клинок / приют / проекция / разлучена  
+Where: тело / клинок / приют / проекция / разлучена  
 Era: WotLK → SL  
 Slash: `/xal` `/xal-where` `/xal-want` `/era` `/blade`
 
